@@ -4,11 +4,11 @@ class Luhn
   end
   
   def addends
-    addends = @number.digits.map.with_index do |dig, index|
+    modified_digits = @number.digits.map.with_index do |dig, index|
       new_dig = (index.odd? ? dig * 2 : dig)
       new_dig > 9 ? new_dig - 9 : new_dig
     end
-    addends.reverse
+    modified_digits.reverse
   end
 
   def checksum
