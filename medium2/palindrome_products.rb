@@ -1,4 +1,6 @@
 class Palindromes
+  PalindromeFactors = Struct.new(:factors, :value)
+  
   def initialize(min_factor: 1, max_factor: 1)
     @min = min_factor
     @max = max_factor
@@ -25,14 +27,5 @@ class Palindromes
 
   def palindrome?(number)
     number == number.to_s.reverse.to_i
-  end
-end
-
-class PalindromeFactors
-  attr_reader :factors, :value
-
-  def initialize(factors, value)
-    @factors = factors
-    @value = value
   end
 end
