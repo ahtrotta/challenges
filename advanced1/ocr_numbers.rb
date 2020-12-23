@@ -1,9 +1,7 @@
 class OCR
   DIGITS = [
-    " _ \n| |\n|_|\n", "   \n  |\n  |\n", " _ \n _|\n|_ \n",
-    " _ \n _|\n _|\n", "   \n|_|\n  |\n", " _ \n|_ \n _|\n",
-    " _ \n|_ \n|_|\n", " _ \n  |\n  |\n", " _ \n|_|\n|_|\n",
-    " _ \n|_|\n _|\n"
+    " _ | ||_|", "     |  |", " _  _||_ ", " _  _| _|", "   |_|  |",
+    " _ |_  _|", " _ |_ |_|", " _   |  |", " _ |_||_|", " _ |_| _|"
   ]
 
   def initialize(text)
@@ -11,49 +9,25 @@ class OCR
   end
 
   def convert
-    digits = separate_digits.map do |digit|
-      binary_font_digit = digit.join("\n") + "\n"
-      DIGITS.index(binary_font_digit) || '?'
+    numbers = separate_digits(@text).map do |digits|
+      digits.map { |digit| DIGITS.index(digit.join) || '?' }.join
     end
-    digits.join
+    numbers.join(',')
   end
 
   private
 
-  def separate_digits
-    split_text = @text.chomp.split("\n").map do |line|
-      line_array = line.scan(/.{1,3}/)
-      line_array = [''] if line_array.empty?
-
-      line_array.map do |row|
-        row << ' ' until row.length == 3
-        row
-      end
+  def separate_digits(input)
+    input.split("\n").each_slice(4).map do |sequence|
+      sequence.first(3).map { |line| divide(line) }.transpose
     end
+  end
 
-    split_text.transpose
+   def divide(line) 
+     line = '   ' if line.empty?
+     line.scan(/.{1,3}/).map do |row|
+       row << ' ' until row.length == 3
+       row
+     end
   end
 end
-
-text = <<-NUMBER.chomp
-    _
-  || |
-  ||_|
-
-NUMBER
-
-text2 = <<-NUMBER.chomp
- _
-|_|
- _|
-
-NUMBER
-
-text3 = <<-NUMBER.chomp
-
-  |
-  |
-
-NUMBER
-
-p OCR.new(text3).convert
